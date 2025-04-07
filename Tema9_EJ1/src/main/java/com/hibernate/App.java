@@ -14,6 +14,8 @@ public class App {
 		System.out.println("5 Ver ciudades");
 		System.out.println("6 Ver datos ciudad");
 		System.out.println("7 Ver ciudades con mas de 1M de habitantes");
+		System.out.println("8 Seleccionar ciudades con menos habitantes que una cantidad introducida por el usuario");
+		System.out.println("9 Mostrar los habitantes de la ciudad que coincida con el nombre introducido por el usuario.");
 		System.out.println("0 → Salir");
 	}
 
@@ -36,7 +38,7 @@ public class App {
 				System.out.println("Hasta pronto");
 				break;
 
-			//	INSERTAR
+			// INSERTAR
 			case 1:
 				System.out.println("Dime el nombre");
 				nombre = sc.next();
@@ -50,8 +52,8 @@ public class App {
 				System.out.println();
 
 				break;
-				
-				//BORRAR
+
+			// BORRAR
 			case 2:
 				System.out.println("Dime el codigo");
 				code = sc.nextInt();
@@ -62,7 +64,7 @@ public class App {
 
 				break;
 
-				//ACTUALIZAR NOMBRE MEDIANTE CODE
+			// ACTUALIZAR NOMBRE MEDIANTE CODE
 			case 3:
 				System.out.println("Dime el ID");
 				code = sc.nextInt();
@@ -77,7 +79,7 @@ public class App {
 
 				break;
 
-				//ACTUALIZAR N_HABITANTES MEDIANTE CODE
+			// ACTUALIZAR N_HABITANTES MEDIANTE CODE
 			case 4:
 				System.out.println("Dime el ID");
 				code = sc.nextInt();
@@ -85,34 +87,39 @@ public class App {
 				System.out.println("Dime el numero de habitantes");
 				numhabitantes = sc.nextInt();
 
-				ciuDAO.selectCiudadBYID(code);
-				cid1.getNum_habitantes();
+				cid1 = ciuDAO.selectCiudadBYID(code);
 				cid1.setNum_habitantes(numhabitantes);
 				ciuDAO.updateCiudad(cid1);
 				System.out.println();
 
 				break;
 
-				//RECORRER CIUDADES
+			// RECORRER CIUDADES
 			case 5:
 				List<Ciudad> ciudades = ciuDAO.selectAllCiudad();
 				for (Ciudad p : ciudades) {
 					System.out.println(p.getNombre() + " " + p.getId() + " " + p.getNum_habitantes());
 				}
-				
+
 				break;
 
-				//CONSEGUIR CIUDAD ESPECIFICA
+			// CONSEGUIR CIUDAD ESPECIFICA
 			case 6:
 				System.out.println("Dime el ID");
 				code = sc.nextInt();
-				cid1=ciuDAO.selectCiudadBYID(code);
+				cid1 = ciuDAO.selectCiudadBYID(code);
 				System.out.println(cid1.getNombre());
 				System.out.println();
 				break;
 
-				//CONSEGUIR CIUDADES CON MAS DE 1M DE HABITANTES
-			case 7:
+			// CONSEGUIR CIUDADES CON MAS DE 1M DE HABITANTES
+			case 7:				
+				List<Ciudad> ciudades_1M = ciuDAO.selectAll1M();
+				for (Ciudad p : ciudades_1M) {
+						System.out.println(p.getNombre() + " " + p.getId() + " " + p.getNum_habitantes());
+					}
+				
+				/* NO HACER
 				List<Ciudad> ciudades_1M = ciuDAO.selectAllCiudad();
 				for (Ciudad p : ciudades_1M) {
 					if (p.getNum_habitantes() > 1000000) {
@@ -120,30 +127,56 @@ public class App {
 					}
 				}
 				System.out.println();
+				 */
 				
 				break;
-				
+
+			// SELECCIONAR CIUDADES CON MENOS HABITANTES INTRODUCIDOS DEL USUARIO
 			case 8:
 				System.out.println("Dime un numero");
 				int numero = sc.nextInt();
-				List<Ciudad> ciudades_usu = ciuDAO.selectAllCiudad();
-
+				List<Ciudad> ciudades_usu = ciuDAO.selectAllmenosuser(numero);
+				
+				for (Ciudad p : ciudades_usu) {
+						System.out.println(p.getNombre() + " ID: " + p.getId() + " Nª hab: " + p.getNum_habitantes());
+					}
+				
+				/*NO HACER
 				for (Ciudad p : ciudades_usu) {
 					if (p.getNum_habitantes() < numero) {
-						System.out.println(p.getNombre() + " " + p.getId() + " " + p.getNum_habitantes());
+						System.out.println(p.getNombre() + " ID: " + p.getId() + " Nª hab: " + p.getNum_habitantes());
 					}
-				}
-				System.out.println();
+				}*/
 				
+				System.out.println();
+
 				break;
 				
+				// MOSTRAR HABITANTES DE LA CIUDAD QUE COINCIDA CON EL NOMBRE PUESTO DEL USUARIO
 			case 9:
 				System.out.println("Dime el nombre");
 				String nombre_usu = sc.next();
+				cid1 = ciuDAO.selectCiudadBYNombre(nombre_usu);
+				System.out.println(cid1.getNum_habitantes());
+				System.out.println();
 				
+				/*
+				case 9:
+					System.out.println("Dime el nombre");
+					String nombre_usu = sc.next();
+
+					List<Ciudad> ciudadeslista = ciuDAO.selectAllCiudad();
+
+					for (Ciudad p : ciudadeslista) {
+						if (p.getNombre().equals(nombre_usu)) {
+							System.out.println(p.getNombre() + " ID: " + p.getId() + " Nª hab: " + p.getNum_habitantes());
+						}
+					}
+					System.out.println();
+				 */
 				
 				break;
-				
+
 			default:
 				System.out.println("Opción inválida");
 
